@@ -117,7 +117,6 @@ module.exports.importFromCsv = function importFromCsv(filename) {
     // Ваша чёрная магия:
     // - Разбираете записи из `data`
     // - Добавляете каждую запись в книгу
-    // console.info(phoneBook);
 };
 
 /*
