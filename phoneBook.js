@@ -1,56 +1,64 @@
 'use strict';
 
-var phoneBook = []; // Здесь вы храните записи как хотите
+var phoneBook = new PhoneBook();
+
+module.exports.PhoneBook = function PhoneBook() {
+
+    var pBook = [];
+    var self = this;
+    function validateEmail(email) {
+        var regE;
+        regE = /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-я0-9_-]+(\.[a-я0-9_-]+)*\.[a-zа-я]{2,6}$/.test(email);
+
+        return regE;
+    }
+
+    function validatePhone(phone) {
+
+        return /^\+?([0-9]{1,2}[\- ]?)?((\(\d{3}\))|(\d{3}))[\- ]?[\d\- ]{7,10}$/.test(phone);
+    }
+
+    this.print = function (person) {
+        var pstr = '';
+        var i = Object.keys(person).length;
+        var j = 0;
+        for (var key in person) {
+            if (j <= i) {
+                pstr = pstr + person[key];
+                j++;
+                pstr = pstr + ', ';
+            }
+        }
+        pstr = pstr.substring(0, pstr.length - 2);
+        console.info(pstr);
+    };
+
+    this.add = function (name, phone, email) {
+        if (!validateEmail(email) || !validatePhone(phone) || name.length === 0) {
+            return self;
+        }
+
+        var person = {
+            name: name,
+            phone: phone,
+            email: email
+        };
+        // console.info(person);
+        // Ваша невероятная магия здесь
+        pBook.push(person);
+        // console.info(phoneBook);
+        self.print(person);
+
+        return self;
+    };
+
+
+} // Здесь вы храните записи как хотите
 
 /*
    Функция добавления записи в телефонную книгу.
    На вход может прийти что угодно, будьте осторожны.
 */
-
-function validateEmail(email) {
-    var regE;
-    regE = /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-я0-9_-]+(\.[a-я0-9_-]+)*\.[a-zа-я]{2,6}$/.test(email);
-
-    return regE;
-}
-
-function validatePhone(phone) {
-
-    return /^\+?([0-9]{1,2}[\- ]?)?((\(\d{3}\))|(\d{3}))[\- ]?[\d\- ]{7,10}$/.test(phone);
-}
-
-function print(person) {
-    var pstr = '';
-    var i = Object.keys(person).length;
-    var j = 0;
-    for (var key in person) {
-        if (j <= i) {
-            pstr = pstr + person[key];
-            j++;
-            pstr = pstr + ', ';
-        }
-    }
-    console.info(pstr);
-}
-
-module.exports.add = function add(name, phone, email) {
-    if (!validateEmail(email) || !validatePhone(phone) || name.length === 0) {
-        return phoneBook;
-    }
-
-    var person = {
-        name: name,
-        phone: phone,
-        email: email
-    };
-    // console.info(person);
-    // Ваша невероятная магия здесь
-    phoneBook.push(person);
-    // console.info(phoneBook);
-    print(person);
-
-    return phoneBook;
-};
 
 
 /*
@@ -124,10 +132,10 @@ module.exports.importFromCsv = function importFromCsv(filename) {
 */
 module.exports.showTable = function showTable() {
     var totalLenght = 64;
-    var space = '                     ';
-    var firstLine = '=================================================================';
+    var space = Array(20).join(' ');
+    var firstLine = Array(64).join('=');
     var i = 0;
-    var secondLine = '|                                                              |';
+    var secondLine = '|' + Array(62).join(' ') + '|';
     console.info(firstLine);
     console.info(secondLine);
     for (i = 0; i < phoneBook.length; i++) {
