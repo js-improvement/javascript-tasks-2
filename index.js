@@ -1,9 +1,9 @@
 'use strict';
 
+//var phoneBook = require('./phoneBook');
 var phoneBook = require('./phoneBook');
-
 // Добавляем записи
-phoneBook.PhoneBook().add();
+
 phoneBook.add('Alex', '+7 (111) 777-2-222');
 phoneBook.add('Alex', '+7 (111) 777-2-222');
 phoneBook.add('Сергей', '7 999 6667778', 'gs@example.com');
