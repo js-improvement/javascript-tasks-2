@@ -7,7 +7,7 @@ var PhoneBook = function () {
 
     Array.call(this);
     this.phoneBook = [];
-    console.log('instance PhoneBook created');
+
 
 };
 
