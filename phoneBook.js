@@ -35,7 +35,7 @@ function print(person) {
 
 module.exports.add = function add(name, phone, email) {
     if (!validateEmail(email) || !validatePhone(phone) || name.length === 0) {
-        return false;
+        return phoneBook;
     }
 
     var person = {
@@ -49,7 +49,7 @@ module.exports.add = function add(name, phone, email) {
     // console.info(phoneBook);
     print(person);
 
-    return true;
+    return phoneBook;
 };
 
 
