@@ -23,7 +23,10 @@ phoneBook.remove('Олег');
 // Удален 1 контакт
 
 // Выводит записи в виде красивой таблички
-phoneBook.showTable();
+phoneBook.find('777').showTable();
+phoneBook.importFromCsv('./backup.csv').showTable();
+phoneBook.remove('Олег').showTable();
+
 // Выводит
 // ┌─────────────┬────────────────────╥──────────────────┐
 // │ Имя         │ Телефон            ║ email            │
