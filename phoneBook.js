@@ -161,5 +161,5 @@ class PhoneBook {
     }
 }
 
-var phoneBook = new PhoneBook();
-module.exports = phoneBook;
+
+module.exports = PhoneBook;
