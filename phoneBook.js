@@ -75,7 +75,6 @@ function toSearch(i, query) {
 
 }
 
-
 // Функция удаления записи в телефонной книге.
 
 module.exports.remove = function remove(query) {
@@ -142,14 +141,22 @@ module.exports.importFromCsv = function importFromCsv(filename) {
 module.exports.showTable = function showTable() {
     console.info('Исполняем showTable');
 // Ваша чёрная магия здесь
-    console.info(String('\n┌─────────────┬────────' +
-        '────────────┬─────────────────┐\n' +
-        '│ Имя         │ Телефон            │ email           │\n├─' +
-        '────────────┼────────────────────│───────────────' +
+    console.info(String('\n┌────────────────────┬────────' +
+        '────────────┬─────────────────────────┐\n' +
+        '│ Имя                │ Телефон            │ email                   │\n├─' +
+        '───────────────────┼────────────────────│───────────────────────' +
         '--┤'));
     var i;
     for (i = 0; i <= phoneBook.length - 1; i++) {
-        console.info('│   ' + phoneBook[i].name +
-            '    │ ' + phoneBook[i].phone + '    │ ' + phoneBook[i].email + '    │ ');
+        var space = ' ';
+
+        var countSpaceName = 20 - phoneBook[i].name.length;
+        var countSpacePhone = 20 - phoneBook[i].phone.length;
+        var countSpaceEmail = 25 - phoneBook[i].email.length;
+
+        console.info('│' + phoneBook[i].name + space.repeat(countSpaceName) +
+        '│' + phoneBook[i].phone + space.repeat(countSpacePhone) + '│' +
+            phoneBook[i].email + space.repeat(countSpaceEmail) + '│');
     }
+    console.info('│' + '_'.repeat(20) + '│' + '_'.repeat(20) + '│' + '_'.repeat(25) + '│');
 };
