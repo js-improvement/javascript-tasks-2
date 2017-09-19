@@ -26,7 +26,8 @@ module.exports.add = function add(name, phone, email) {
 function toValidateNumber(phone) {
     var regExp = /^((8|\+?7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/;
     if (regExp.test(phone)) {
-        return (true);
+
+        return true;
     }
 }
 
@@ -34,7 +35,7 @@ function toValidateNumber(phone) {
 function toValidateEmail(email) {
     var regExp = /^[-._a-z0-9]+@(?:[a-z0-9][-a-z0-9]+\.)+[a-z]{2,6}$/;
     if (regExp.test(email)) {
-        return (true);
+        return true;
     }
 
 }
@@ -48,15 +49,24 @@ module.exports.find = function find(query) {
     // Ваша удивительная магия здесь
     var i;
     for (i = 0; i <= phoneBook.length - 1; i++) {
-        for (var key in phoneBook[i]) {
-            toSearch (i, key, query);
-        }
+
+        toSearch (i, query);
+
     }
 
 };
 
-function toSearch(i, key, query) {
-    if (phoneBook[i][key].indexOf(query) !== -1) {
+function toSearch(i, query) {
+
+    if (phoneBook[i].name.indexOf(query) !== -1) {
+        console.info(phoneBook[i].name + ', ' + phoneBook[i].phone +
+                ', ' + phoneBook[i].email);
+    }
+    if (phoneBook[i].phone.indexOf(query) !== -1) {
+        console.info(phoneBook[i].name + ', ' + phoneBook[i].phone +
+            ', ' + phoneBook[i].email);
+    }
+    if (phoneBook[i].email.indexOf(query) !== -1) {
         console.info(phoneBook[i].name + ', ' + phoneBook[i].phone +
             ', ' + phoneBook[i].email);
     }
@@ -74,20 +84,28 @@ module.exports.remove = function remove(query) {
     var i;
 
     for (i = 0; i <= phoneBook.length - 1; i++) {
-        for (var key in phoneBook[i]) {
-            toSearchDelete (i, key, query);
-        }
+
+        toSearchDelete (i, query);
+
         delete phoneBook[numberOfDelete];
     }
 
 };
-function toSearchDelete(i, key, query) {
-    if (phoneBook[i][key].indexOf(query) !== -1) {
+function toSearchDelete(i, query) {
+    if (phoneBook[i].name.indexOf(query) !== -1) {
         console.info(' Контакт ' + phoneBook[i].name + ' был удалён');
         numberOfDelete = i;
-
-        return;
     }
+    if (phoneBook[i].phone.indexOf(query) !== -1) {
+        console.info(' Контакт ' + phoneBook[i].name + ' был удалён');
+        numberOfDelete = i;
+    }
+    if (phoneBook[i].email.indexOf(query) !== -1) {
+        console.info(' Контакт ' + phoneBook[i].name + ' был удалён');
+        numberOfDelete = i;
+    }
+
+    return;
 }
 
 /*
@@ -102,6 +120,7 @@ module.exports.importFromCsv = function importFromCsv(filename) {
     var dataParsingPerson = data.split(['\n']);
     for (var i = 0; i <= dataParsingPerson.length - 1; i++) {
         var dataParsingItem = dataParsingPerson[i].split(';');
+        console.info(dataParsingItem[0] + '   ' + dataParsingItem[1]);
 // - Добавляете каждую запись в книгу
         if (toValidateNumber(dataParsingItem[1]) && toValidateEmail(dataParsingItem[2])) {
             var person = {};
@@ -124,13 +143,13 @@ module.exports.showTable = function showTable() {
     console.info('Исполняем showTable');
 // Ваша чёрная магия здесь
     console.info(String('\n┌─────────────┬────────' +
-        '─────────────────────────────┐\n' +
-        '│ Имя         │ Телефон            ║ email          │\n├─' +
-        '────────────┼────────────────────╫───────────────' +
-        '-┤\n'));
+        '────────────┬─────────────────┐\n' +
+        '│ Имя         │ Телефон            │ email           │\n├─' +
+        '────────────┼────────────────────│───────────────' +
+        '--┤'));
     var i;
     for (i = 0; i <= phoneBook.length - 1; i++) {
-        console.info(String('│   ' + phoneBook[i].name +
-            '    │ ') + phoneBook[i].phone + '    │ ' + phoneBook[i].email + '    │ ');
+        console.info('│   ' + phoneBook[i].name +
+            '    │ ' + phoneBook[i].phone + '    │ ' + phoneBook[i].email + '    │ ');
     }
 };
