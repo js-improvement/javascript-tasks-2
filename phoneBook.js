@@ -89,6 +89,7 @@ function searchThroughObject(obj, query) {
 module.exports.importFromCsv = function importFromCsv(filename) {
     var data = require('fs').readFileSync(filename, 'utf-8');
 
+    console.info(data);
     // Ваша чёрная магия:
     // - Разбираете записи из `data`
     // - Добавляете каждую запись в книгу
