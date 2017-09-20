@@ -1,15 +1,22 @@
 'use strict';
 
-var phoneBook; // Здесь вы храните записи как хотите
+var phoneBook = []; // Здесь вы храните записи как хотите
 
 /*
    Функция добавления записи в телефонную книгу.
    На вход может прийти что угодно, будьте осторожны.
 */
 module.exports.add = function add(name, phone, email) {
+    if (!validateName(name) || !validatePhone(phone) || !validateEmail(email)) {
+        return;
+    }
 
-    // Ваша невероятная магия здесь
-
+    var person = {
+        name: name,
+        phone: phone,
+        email: email
+    };
+    phoneBook.push(person);
 };
 
 /*
@@ -17,8 +24,11 @@ module.exports.add = function add(name, phone, email) {
    Поиск ведется по всем полям.
 */
 module.exports.find = function find(query) {
-
-    // Ваша удивительная магия здесь
+    for (var i = 0; i < phoneBook.length; i++) {
+        if (searchThroughObject(phoneBook[i], query)) {
+            console.log(phoneBook[i].name + ', ' + phoneBook[i].phone + ', ' + phoneBook[i].email);
+        }
+    }
 
 };
 
@@ -27,9 +37,52 @@ module.exports.find = function find(query) {
 */
 module.exports.remove = function remove(query) {
 
-    // Ваша необьяснимая магия здесь
-
+    var counter = 0;
+    for (var i = 0; i < phoneBook.length; i++) {
+        if (searchThroughObject(phoneBook[i], query)) {
+            phoneBook.splice(i, 1);
+            counter++;
+            break;
+        }
+    }
+    console.log('Removed ' + counter + ' object(s).');
 };
+
+function validateName(name) {
+    if (typeof name === 'string') {
+        return true;
+    }
+
+    return false;
+}
+
+function validatePhone(phone) {
+    var phoneRegExp = /^\+?\d{0,2}\s?\d{3}\s?\d{3}[\s-]?\d[\s-]?\d{3}$|^\+?\d{0,2}\s?\(\d{3}\)\s?\d{3}[\s-]?\d[\s-]?\d{3}$/;
+    if (typeof phone === 'string' && phoneRegExp.test(phone) === true) {
+        return true;
+    }
+
+    return false;
+}
+
+function validateEmail(email) {
+    var emailRegExp = /^[a-zа-я0-9-]+@[a-zа-я0-9-]+\.[a-zа-я]+[.a-zа-я]*$/;
+    if (typeof email === 'string' && emailRegExp.test(email) === true) {
+        return true;
+    }
+
+    return false;
+}
+
+function searchThroughObject(obj, query) {
+    for (var entry in obj) {
+        if (obj[entry].indexOf(query) !== -1) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 /*
    Функция импорта записей из файла (задача со звёздочкой!).
@@ -47,6 +100,6 @@ module.exports.importFromCsv = function importFromCsv(filename) {
 */
 module.exports.showTable = function showTable() {
 
-    // Ваша чёрная магия здесь
+    console.log(phoneBook);
 
 };
