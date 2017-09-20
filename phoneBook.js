@@ -29,7 +29,6 @@ module.exports.find = function find(query) {
             console.log(phoneBook[i].name + ', ' + phoneBook[i].phone + ', ' + phoneBook[i].email);
         }
     }
-
 };
 
 /*
@@ -57,7 +56,7 @@ function validateName(name) {
 }
 
 function validatePhone(phone) {
-    var phoneRegExp = /^\+?\d{0,2}\s?\d{3}\s?\d{3}[\s-]?\d[\s-]?\d{3}$|^\+?\d{0,2}\s?\(\d{3}\)\s?\d{3}[\s-]?\d[\s-]?\d{3}$/;
+    var phoneRegExp = /^\+?[0-9]{0,2}\s?(\([0-9]{3}\)|[0-9]{3})[0-9-\s]{7,10}$/;
     if (typeof phone === 'string' && phoneRegExp.test(phone) === true) {
         return true;
     }
