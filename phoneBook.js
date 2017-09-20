@@ -26,7 +26,7 @@ module.exports.add = function add(name, phone, email) {
 module.exports.find = function find(query) {
     for (var i = 0; i < phoneBook.length; i++) {
         if (searchThroughObject(phoneBook[i], query)) {
-            console.log(phoneBook[i].name + ', ' + phoneBook[i].phone + ', ' + phoneBook[i].email);
+            console.info(phoneBook[i].name + ', ' + phoneBook[i].phone + ', ' + phoneBook[i].email);
         }
     }
 };
@@ -44,7 +44,7 @@ module.exports.remove = function remove(query) {
             break;
         }
     }
-    console.log('Removed ' + counter + ' object(s).');
+    console.info('Removed ' + counter + ' object(s).');
 };
 
 function validateName(name) {
@@ -98,7 +98,5 @@ module.exports.importFromCsv = function importFromCsv(filename) {
    Функция вывода всех телефонов в виде ASCII (задача со звёздочкой!).
 */
 module.exports.showTable = function showTable() {
-
-    console.log(phoneBook);
-
+    console.info(phoneBook);
 };
