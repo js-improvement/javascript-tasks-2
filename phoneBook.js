@@ -84,52 +84,30 @@ module.exports.remove = function remove(query) {
 
     for (i = 0; i <= phoneBook.length - 1; i++) {
 
-        toSearchDelete (i, query);
+        toSearch (i, query);
 
         delete phoneBook[numberOfDelete];
     }
 
 };
-function toSearchDelete(i, query) {
-    if (phoneBook[i].name.indexOf(query) !== -1) {
-        console.info(' Контакт ' + phoneBook[i].name + ' был удалён');
-        numberOfDelete = i;
-    }
-    if (phoneBook[i].phone.indexOf(query) !== -1) {
-        console.info(' Контакт ' + phoneBook[i].name + ' был удалён');
-        numberOfDelete = i;
-    }
-    if (phoneBook[i].email.indexOf(query) !== -1) {
-        console.info(' Контакт ' + phoneBook[i].name + ' был удалён');
-        numberOfDelete = i;
-    }
-
-    return;
-}
 
 /*
    Функция импорта записей из файла (задача со звёздочкой!).
 */
 module.exports.importFromCsv = function importFromCsv(filename) {
     console.info('Исполняем importFromCsv');
+
     var data = require('fs').readFileSync(filename, 'utf-8');
 
     // Ваша чёрная магия:
     // - Разбираете записи из `data`
-    var dataParsingPerson = data.split(['\n']);
+    var dataParsingPerson = data.split(/\r?\n+/);
     for (var i = 0; i <= dataParsingPerson.length - 1; i++) {
         var dataParsingItem = dataParsingPerson[i].split(';');
-        console.info(dataParsingItem[0] + '   ' + dataParsingItem[1]);
+
 // - Добавляете каждую запись в книгу
-        if (toValidateNumber(dataParsingItem[1]) && toValidateEmail(dataParsingItem[2])) {
-            var person = {};
-            person.name = dataParsingItem[0];
-            person.phone = dataParsingItem[1];
-            person.email = dataParsingItem[2];
-            phoneBook.push(person);
-        } else {
-            console.info('неверный формат данных!');
-        }
+        console.info(dataParsingItem[0], dataParsingItem[1], dataParsingItem[2]);
+        module.exports.add(dataParsingItem[0], dataParsingItem[1], dataParsingItem[2]);
 
     }
 
