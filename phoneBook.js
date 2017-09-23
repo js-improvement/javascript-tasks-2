@@ -48,7 +48,7 @@ module.exports.find = function find(query) {
     console.info('Исполняем FIND');
     // Ваша удивительная магия здесь
     var i;
-    for (i = 0; i <= phoneBook.length - 1; i++) {
+    for (i = 0; i < phoneBook.length; i++) {
 
         toSearch (i, query);
 
@@ -82,7 +82,7 @@ module.exports.remove = function remove(query) {
     // Ваша необьяснимая магия здесь
     var i;
 
-    for (i = 0; i <= phoneBook.length - 1; i++) {
+    for (i = 0; i < phoneBook.length; i++) {
 
         toSearch (i, query);
 
@@ -102,7 +102,7 @@ module.exports.importFromCsv = function importFromCsv(filename) {
     // Ваша чёрная магия:
     // - Разбираете записи из `data`
     var dataParsingPerson = data.split(/\r?\n+/);
-    for (var i = 0; i <= dataParsingPerson.length - 1; i++) {
+    for (var i = 0; i < dataParsingPerson.length; i++) {
         var dataParsingItem = dataParsingPerson[i].split(';');
 
 // - Добавляете каждую запись в книгу
@@ -125,7 +125,7 @@ module.exports.showTable = function showTable() {
         '───────────────────┼────────────────────│───────────────────────' +
         '--┤'));
     var i;
-    for (i = 0; i <= phoneBook.length - 1; i++) {
+    for (i = 0; i < phoneBook.length; i++) {
         var space = ' ';
 
         var countSpaceName = 20 - phoneBook[i].name.length;
