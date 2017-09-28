@@ -48,29 +48,19 @@ module.exports.remove = function remove(query) {
 };
 
 function validateName(name) {
-    if (typeof name === 'string') {
-        return true;
-    }
-
-    return false;
+    return typeof name === 'string';
 }
 
 function validatePhone(phone) {
     var phoneRegExp = /^\+?[0-9]{0,2}\s?(\([0-9]{3}\)|[0-9]{3})[0-9-\s]{7,10}$/;
-    if (typeof phone === 'string' && phoneRegExp.test(phone) === true) {
-        return true;
-    }
 
-    return false;
+    return typeof phone === 'string' && phoneRegExp.test(phone) === true;
 }
 
 function validateEmail(email) {
     var emailRegExp = /^[a-zа-я0-9-]+@[a-zа-я0-9-]+\.[a-zа-я]+[.a-zа-я]*$/;
-    if (typeof email === 'string' && emailRegExp.test(email) === true) {
-        return true;
-    }
 
-    return false;
+    return typeof email === 'string' && emailRegExp.test(email) === true;
 }
 
 function searchThroughObject(obj, query) {
@@ -99,5 +89,126 @@ module.exports.importFromCsv = function importFromCsv(filename) {
    Функция вывода всех телефонов в виде ASCII (задача со звёздочкой!).
 */
 module.exports.showTable = function showTable() {
-    console.info(phoneBook);
+    var columnsWidthList = getColumnsWidthList();
+
+    if (columnsWidthList === -1) {
+        console.info('There are no contacts in the phone book');
+
+        return 0;
+    }
+
+    printTopTableLine(columnsWidthList);
+    printTableHeaders(columnsWidthList);
+    printMidTableLine(columnsWidthList);
+    printTableContent(columnsWidthList);
+    printBotTableLine(columnsWidthList);
 };
+
+function getColumnsWidthList() {
+    if (phoneBook.length === 0) {
+        return -1;
+    }
+
+    var columnsWidthList = [];
+
+    // Fill the array with the headers' lengths
+    for (var key in phoneBook[0]) {
+        columnsWidthList.push(key.length);
+    }
+
+    // Find the columns lengths that fit any data
+    var j = 0;
+    for (var i = 0; i < phoneBook.length; i++) {
+        for (var key in phoneBook[i]) {
+            columnsWidthList[j] = Math.max(columnsWidthList[j], phoneBook[i][key].length);
+            j++;
+        }
+        j = 0;
+    }
+
+    return columnsWidthList;
+}
+
+function printTableLine(linePosition, columnsWidthList) {
+    var columnsList = [];
+    for (var i = 0; i < columnsWidthList.length; i++) {
+        columnsList.push('─'.repeat(columnsWidthList[i]));
+    }
+    var leftBorderSymbol = '';
+    var thinSeparatorSymbol = '';
+    var thickSeparatorSymbol = '';
+    var rightBorderSymbol = '';
+
+    switch (linePosition) {
+        case 'top':
+            leftBorderSymbol = '┌';
+            thinSeparatorSymbol = '┬';
+            thickSeparatorSymbol = '╥';
+            rightBorderSymbol = '┐';
+            break;
+        case 'mid':
+            leftBorderSymbol = '├';
+            thinSeparatorSymbol = '┼';
+            thickSeparatorSymbol = '╫';
+            rightBorderSymbol = '┤';
+            break;
+        case 'bot':
+            leftBorderSymbol = '└';
+            thinSeparatorSymbol = '┴';
+            thickSeparatorSymbol = '╨';
+            rightBorderSymbol = '┘';
+            break;
+        default:
+            return;
+    }
+
+    var resultString = leftBorderSymbol;
+
+    for (var j = 0; j < columnsWidthList.length - 1; j++) {
+        resultString += columnsList[j] + thinSeparatorSymbol;
+    }
+
+    resultString += columnsList[columnsWidthList.length - 1] + rightBorderSymbol;
+
+    console.info(resultString);
+}
+
+function printTopTableLine(columnsWidthList) {
+    printTableLine('top', columnsWidthList);
+}
+
+function printMidTableLine(columnsWidthList) {
+    printTableLine('mid', columnsWidthList);
+}
+
+function printBotTableLine(columnsWidthList) {
+    printTableLine('bot', columnsWidthList);
+}
+
+function printTableHeaders(columnsWidthList) {
+    var resultString = '│';
+
+    var j = 0;
+    for (var key in phoneBook[0]) {
+        resultString += key + ' '.repeat(columnsWidthList[j] - key.length) + '│';
+        j++;
+    }
+
+    console.info(resultString);
+}
+
+function printTableContent(columnsWidthList) {
+    var resultString = '│';
+
+    var j = 0;
+    for (var i = 0; i < phoneBook.length; i++) {
+        for (var key in phoneBook[i]) {
+            resultString += phoneBook[i][key] +
+                            ' '.repeat(columnsWidthList[j] - phoneBook[i][key].length) + '│';
+            j++;
+        }
+        console.info(resultString);
+        resultString = '│';
+        j = 0;
+    }
+}
