@@ -94,9 +94,11 @@ module.exports.showTable = function showTable() {
 };
 
 function searchThroughObject(obj, query) {
-    for (var entry in obj) {
-        if (obj[entry].indexOf(query) !== -1) {
-            return true;
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            if (obj[key].indexOf(query) !== -1) {
+                return true;
+            }
         }
     }
 
@@ -113,7 +115,7 @@ function getColumnsWidthList() {
 
     // Fill the array with the headers' lengths
     for (key in phoneBook[0]) {
-        if (Object.prototype.hasOwnProperty.call(phoneBook[0], key)) {
+        if (phoneBook[0].hasOwnProperty(key)) {
             columnsWidthList.push(key.length);
         }
     }
@@ -122,7 +124,7 @@ function getColumnsWidthList() {
     var j = 0;
     for (var i = 0; i < phoneBook.length; i++) {
         for (key in phoneBook[i]) {
-            if (Object.prototype.hasOwnProperty.call(phoneBook[i], key)) {
+            if (phoneBook[i].hasOwnProperty(key)) {
                 columnsWidthList[j] = Math.max(columnsWidthList[j], phoneBook[i][key].length);
                 j++;
             }
@@ -190,7 +192,7 @@ function printTableHeaders(columnsWidthList) {
 
     var j = 0;
     for (var key in phoneBook[0]) {
-        if (Object.prototype.hasOwnProperty.call(phoneBook[0], key)) {
+        if (phoneBook[0].hasOwnProperty(key)) {
             resultString += key + ' '.repeat(columnsWidthList[j] - key.length) + '│';
             j++;
         }
@@ -205,7 +207,7 @@ function printTableContent(columnsWidthList) {
     var j = 0;
     for (var i = 0; i < phoneBook.length; i++) {
         for (var key in phoneBook[i]) {
-            if (Object.prototype.hasOwnProperty.call(phoneBook[0], key)) {
+            if (phoneBook[0].hasOwnProperty(key)) {
                 resultString += phoneBook[i][key] +
                     ' '.repeat(columnsWidthList[j] - phoneBook[i][key].length) + '│';
                 j++;
