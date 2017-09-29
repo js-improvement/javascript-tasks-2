@@ -109,18 +109,23 @@ function getColumnsWidthList() {
     }
 
     var columnsWidthList = [];
+    var key = '';
 
     // Fill the array with the headers' lengths
-    for (var key in phoneBook[0]) {
-        columnsWidthList.push(key.length);
+    for (key in phoneBook[0]) {
+        if (Object.prototype.hasOwnProperty.call(phoneBook[0], key)) {
+            columnsWidthList.push(key.length);
+        }
     }
 
     // Find the columns lengths that fit any data
     var j = 0;
     for (var i = 0; i < phoneBook.length; i++) {
-        for (var key in phoneBook[i]) {
-            columnsWidthList[j] = Math.max(columnsWidthList[j], phoneBook[i][key].length);
-            j++;
+        for (key in phoneBook[i]) {
+            if (Object.prototype.hasOwnProperty.call(phoneBook[i], key)) {
+                columnsWidthList[j] = Math.max(columnsWidthList[j], phoneBook[i][key].length);
+                j++;
+            }
         }
         j = 0;
     }
@@ -185,8 +190,10 @@ function printTableHeaders(columnsWidthList) {
 
     var j = 0;
     for (var key in phoneBook[0]) {
-        resultString += key + ' '.repeat(columnsWidthList[j] - key.length) + '│';
-        j++;
+        if (Object.prototype.hasOwnProperty.call(phoneBook[0], key)) {
+            resultString += key + ' '.repeat(columnsWidthList[j] - key.length) + '│';
+            j++;
+        }
     }
 
     console.info(resultString);
@@ -198,9 +205,11 @@ function printTableContent(columnsWidthList) {
     var j = 0;
     for (var i = 0; i < phoneBook.length; i++) {
         for (var key in phoneBook[i]) {
-            resultString += phoneBook[i][key] +
-                            ' '.repeat(columnsWidthList[j] - phoneBook[i][key].length) + '│';
-            j++;
+            if (Object.prototype.hasOwnProperty.call(phoneBook[0], key)) {
+                resultString += phoneBook[i][key] +
+                    ' '.repeat(columnsWidthList[j] - phoneBook[i][key].length) + '│';
+                j++;
+            }
         }
         console.info(resultString);
         resultString = '│';
