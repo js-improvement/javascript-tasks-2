@@ -1,6 +1,6 @@
 'use strict';
 
-var phoneBook = []; // Здесь вы храните записи как хотите
+var phoneBook = [];
 
 /*
    Функция добавления записи в телефонную книгу.
@@ -17,6 +17,22 @@ module.exports.add = function add(name, phone, email) {
         email: email
     };
     phoneBook.push(person);
+
+    function validateName() {
+        return typeof name === 'string';
+    }
+
+    function validatePhone() {
+        var phoneRegExp = /^\+?[0-9]{0,2}\s?(\([0-9]{3}\)|[0-9]{3})[0-9-\s]{7,10}$/;
+
+        return typeof phone === 'string' && phoneRegExp.test(phone) === true;
+    }
+
+    function validateEmail() {
+        var emailRegExp = /^[a-zа-я0-9-]+@[a-zа-я0-9-]+\.[a-zа-я]+[.a-zа-я]*$/;
+
+        return typeof email === 'string' && emailRegExp.test(email) === true;
+    }
 };
 
 /*
@@ -35,7 +51,6 @@ module.exports.find = function find(query) {
    Функция удаления записи в телефонной книге.
 */
 module.exports.remove = function remove(query) {
-
     var counter = 0;
     for (var i = 0; i < phoneBook.length; i++) {
         if (searchThroughObject(phoneBook[i], query)) {
@@ -46,32 +61,6 @@ module.exports.remove = function remove(query) {
     }
     console.info('Removed ' + counter + ' object(s).');
 };
-
-function validateName(name) {
-    return typeof name === 'string';
-}
-
-function validatePhone(phone) {
-    var phoneRegExp = /^\+?[0-9]{0,2}\s?(\([0-9]{3}\)|[0-9]{3})[0-9-\s]{7,10}$/;
-
-    return typeof phone === 'string' && phoneRegExp.test(phone) === true;
-}
-
-function validateEmail(email) {
-    var emailRegExp = /^[a-zа-я0-9-]+@[a-zа-я0-9-]+\.[a-zа-я]+[.a-zа-я]*$/;
-
-    return typeof email === 'string' && emailRegExp.test(email) === true;
-}
-
-function searchThroughObject(obj, query) {
-    for (var entry in obj) {
-        if (obj[entry].indexOf(query) !== -1) {
-            return true;
-        }
-    }
-
-    return false;
-}
 
 /*
    Функция импорта записей из файла (задача со звёздочкой!).
@@ -104,6 +93,16 @@ module.exports.showTable = function showTable() {
     printBotTableLine(columnsWidthList);
 };
 
+function searchThroughObject(obj, query) {
+    for (var entry in obj) {
+        if (obj[entry].indexOf(query) !== -1) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 function getColumnsWidthList() {
     if (phoneBook.length === 0) {
         return -1;
@@ -135,27 +134,23 @@ function printTableLine(linePosition, columnsWidthList) {
         columnsList.push('─'.repeat(columnsWidthList[i]));
     }
     var leftBorderSymbol = '';
-    var thinSeparatorSymbol = '';
-    var thickSeparatorSymbol = '';
+    var separatorSymbol = '';
     var rightBorderSymbol = '';
 
     switch (linePosition) {
         case 'top':
             leftBorderSymbol = '┌';
-            thinSeparatorSymbol = '┬';
-            thickSeparatorSymbol = '╥';
+            separatorSymbol = '┬';
             rightBorderSymbol = '┐';
             break;
         case 'mid':
             leftBorderSymbol = '├';
-            thinSeparatorSymbol = '┼';
-            thickSeparatorSymbol = '╫';
+            separatorSymbol = '┼';
             rightBorderSymbol = '┤';
             break;
         case 'bot':
             leftBorderSymbol = '└';
-            thinSeparatorSymbol = '┴';
-            thickSeparatorSymbol = '╨';
+            separatorSymbol = '┴';
             rightBorderSymbol = '┘';
             break;
         default:
@@ -165,7 +160,7 @@ function printTableLine(linePosition, columnsWidthList) {
     var resultString = leftBorderSymbol;
 
     for (var j = 0; j < columnsWidthList.length - 1; j++) {
-        resultString += columnsList[j] + thinSeparatorSymbol;
+        resultString += columnsList[j] + separatorSymbol;
     }
 
     resultString += columnsList[columnsWidthList.length - 1] + rightBorderSymbol;
