@@ -4,7 +4,7 @@ var phoneBook = [];
 
 // function validContact(name, phone, email) {
 // }
-/**
+/*
  * ФУНКЦИЯ ИЩЕТ МАКСИМАЛЬНУЮ ДЛИННУ ЭЛЕМЕНТА
  * ДЛЯ ПОСЛЕДУЮЩЕГО ВЫВОДА В ВИДЕ ТАБЛИЦЫ
  * С ИСПОЛЬЗОВАНИЕМ СИМВОЛОВ ASCII
@@ -26,7 +26,7 @@ function columnMaxLenght(numbOfColumn, arrayToPrint) {
     return maxLenght;
 }
 
-/**
+/*
  * МЕГА ФУНКЦИЯ ПОИСКА
  * КОТОРАЯ БУДЕТ ИСПОЛЬЗОВАНА В ДАЛЬНЕЙШЕМ
  * ДЛЯ ПОИСКА И УДАЛЕНИЯ КОНТАКТОВ
@@ -35,16 +35,16 @@ function columnMaxLenght(numbOfColumn, arrayToPrint) {
  * @param choo - -1 ДЛЯ УДАЛЕНИЯ КОНТАКТОВ, 1 -ДЛЯ ВСЕГО ОСТАЛЬНОГО
  * @returns {Array} -МАСИИВ НАЙДЕННЫХ КОНТАКТОВ
  */
-function finder(inputData, phoneBook, choo) {
+function finder(inputData, pBook, choo) {
     var searchPattern = new RegExp(inputData, 'i');
     var findedContacts = [];
     if (inputData === undefined || inputData === null) {
 
         return phoneBook;
     }
-    for (var i = 0; i < phoneBook.length; i++) {
-        if (choo < 0 ? searchPattern.test(phoneBook[i].toString()) === true : searchPattern.test(phoneBook[i].toString()) === false) {
-            findedContacts.push(phoneBook[i]);
+    for (var i = 0; i < pBook.length; i++) {
+        if (searchPattern.test(pBook[i].toString()) === choo) {
+            findedContacts.push(pBook[i]);
         }
     }
     if (findedContacts.length === 0) {
@@ -56,7 +56,7 @@ function finder(inputData, phoneBook, choo) {
 
 }
 
-/**
+/*
  * ПОЛНЫЙ ТРЭШ!!!
  * НАПИСАНО В СООАВТОРСТВЕ С САТАНОЙ
  * ГЛУБОКОЙ НОЧЬЮ ПОД ДВУМЯ ДОЗАМИ ДВОЙНОГО ЭСПРЕССО
@@ -85,7 +85,7 @@ function printTable(arrayToPrint) {
 
 }
 
-/**
+/*
  * ФУНКЦИЯ ДОБАВЛЕНИЯ ЗАПИСИ В ТЕЛЕФОННУЮ КНИГУ
  * В ВИДЕ МАССИВА
  * ЕСЛИ ДАННЫЕ ПРОХОДЯТ ПРОВЕРКУ НА ВАЛИДНОСТЬ
@@ -102,7 +102,7 @@ module.exports.addContact = function addContact(name, phone, email) {
     return phoneBook;
 };
 
-/**
+/*
  * ФУНКЦИЯ ПОИСКА
  * ПЕЧАТАЕТ ТАБЛИЧКУ С МАССИВОМ
  * РЕЗУЛЬТАТОВ ПОИСКА
@@ -111,15 +111,15 @@ module.exports.addContact = function addContact(name, phone, email) {
  * @param query -ПРИНИМАЕТ СТРОКОВОЕ ЗНАЧЕНИЕ ДЛЯ ПОИСКА
  */
 module.exports.find = function find(query) {
-    if (finder(query, phoneBook, -1) === false) {
+    if (finder(query, phoneBook, true) === false) {
         console.info(query + '  <-----------<  I CAN NOT FIND THIS SHIT!\n');
     } else {
-        console.info('НАЙДЕНО КОНТАКТОВ: ' + finder(query, phoneBook, -1).length);
-        printTable(finder(query, phoneBook, -1));
+        console.info('НАЙДЕНО КОНТАКТОВ: ' + finder(query, phoneBook, true).length);
+        printTable(finder(query, phoneBook, true));
     }
 };
 
-/**
+/*
  * ФУНКЦИЯ УДАЛЕНИЯ КОНТАКТА
  * ПЕЧАТАЕТ ТАБЛИЧКУ УДАЛЕННЫХ КОНТАКТОВ
  * И ИХ КОЛИЧЕСТВО
@@ -128,11 +128,11 @@ module.exports.find = function find(query) {
  * УДАЛЯЕМЫХ КОНТАКТОВ
  */
 module.exports.remove = function remove(query) {
-    var findedArr = finder(query, phoneBook, -1);
+    var findedArr = finder(query, phoneBook, true);
     if (findedArr === false) {
         console.info(query + '  <-----------<  I CAN NOT FIND AND DELETE THIS SHIT!\n');
     } else {
-        var newBook = finder(query, phoneBook, 1);
+        var newBook = finder(query, phoneBook, false);
             // phoneBook.filter( x => findedArr.indexOf(x) === -1); //КАК ЗАВЕЩАЛ ЕВСТРОПОВ
         // СТЫРИЛ С STACKOVERFLOW.COM НО, ГАДИНА, ESLINT, РУГАЕТСЯ(((((
         phoneBook = newBook;
@@ -141,9 +141,10 @@ module.exports.remove = function remove(query) {
     }
 };
 
-module.exports.importFromCsv = function importFromCsv(filename) {
+/* module.exports.importFromCsv = function importFromCsv(filename) {
     var data = require('fs').readFileSync(filename, 'utf-8');
 };
+*/
 
 /**
  * ФУНКЦИЯ ПЕЧАТИ СОДЕРЖИМОГО ТЕЛЕФОННОЙ КНИГИ
