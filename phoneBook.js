@@ -94,11 +94,14 @@ module.exports.showTable = function showTable() {
 };
 
 function searchThroughObject(obj, query) {
-    for (var key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            if (obj[key].indexOf(query) !== -1) {
-                return true;
-            }
+    var keys = Object.keys(obj);
+    var vals = keys.map(function (key) {
+        return obj[key];
+    });
+
+    for (var i = 0; i < vals.length; i++) {
+        if (vals[i].indexOf(query) !== -1) {
+            return true;
         }
     }
 
