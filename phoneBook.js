@@ -40,10 +40,26 @@ module.exports.add = function add(name, phone, email) {
    Поиск ведется по всем полям.
 */
 module.exports.find = function find(query) {
+    var matchedObjects = [];
+    var counter = 0;
+
     for (var i = 0; i < phoneBook.length; i++) {
         if (searchThroughObject(phoneBook[i], query)) {
-            console.info(phoneBook[i].name + ', ' + phoneBook[i].phone + ', ' + phoneBook[i].email);
+            matchedObjects.push(phoneBook[i]);
+            counter++;
         }
+    }
+
+    if (counter === 0) {
+        console.info('No contacts that match query are found');
+
+        return;
+    }
+
+    console.info(counter + ' contact(s) that match query is(are) found');
+    for (var j = 0; j < matchedObjects.length; j++) {
+        var valuesList = getObjectValues(matchedObjects[j]);
+        console.info(valuesList.join(', '));
     }
 };
 
@@ -59,7 +75,7 @@ module.exports.remove = function remove(query) {
             break;
         }
     }
-    console.info('Removed ' + counter + ' object(s).');
+    console.info('Removed ' + counter + ' contact(s).');
 };
 
 /*
@@ -128,11 +144,46 @@ function getColumnsWidthList() {
     return columnsWidthList;
 }
 
+function printTopTableLine(columnsWidthList) {
+    printTableLine('top', columnsWidthList);
+}
+
+function printMidTableLine(columnsWidthList) {
+    printTableLine('mid', columnsWidthList);
+}
+
+function printBotTableLine(columnsWidthList) {
+    printTableLine('bot', columnsWidthList);
+}
+
+function printTableHeaders(columnsWidthList) {
+    var headersList = getTableHeaders();
+    var headersWithSpacesList = addSpaces(headersList, columnsWidthList);
+    console.info('│' + headersWithSpacesList.join('│') + '│');
+}
+
+function printTableContent(columnsWidthList) {
+    for (var i = 0; i < phoneBook.length; i++) {
+        var valuesList = getObjectValues(phoneBook[i]);
+        var valuesWithSpacesList = addSpaces(valuesList, columnsWidthList);
+        console.info('│' + valuesWithSpacesList.join('│') + '│');
+    }
+}
+
+function addSpaces(array, totalLengthList) {
+    for (var i = 0; i < array.length; i++) {
+        array[i] += ' '.repeat(totalLengthList[i] - array[i].length);
+    }
+
+    return array;
+}
+
 function printTableLine(linePosition, columnsWidthList) {
     var columnsList = [];
     for (var i = 0; i < columnsWidthList.length; i++) {
         columnsList.push('─'.repeat(columnsWidthList[i]));
     }
+
     var leftBorderSymbol = '';
     var separatorSymbol = '';
     var rightBorderSymbol = '';
@@ -157,53 +208,8 @@ function printTableLine(linePosition, columnsWidthList) {
             return;
     }
 
-    var resultString = leftBorderSymbol;
-
-    for (var j = 0; j < columnsWidthList.length - 1; j++) {
-        resultString += columnsList[j] + separatorSymbol;
-    }
-
-    resultString += columnsList[columnsWidthList.length - 1] + rightBorderSymbol;
-
+    var resultString = leftBorderSymbol + columnsList.join(separatorSymbol) + rightBorderSymbol;
     console.info(resultString);
-}
-
-function printTopTableLine(columnsWidthList) {
-    printTableLine('top', columnsWidthList);
-}
-
-function printMidTableLine(columnsWidthList) {
-    printTableLine('mid', columnsWidthList);
-}
-
-function printBotTableLine(columnsWidthList) {
-    printTableLine('bot', columnsWidthList);
-}
-
-function printTableHeaders(columnsWidthList) {
-    var resultString = '│';
-    var j = 0;
-    var headersList = getTableHeaders();
-
-    for (var i = 0; i < headersList.length; i++) {
-        resultString += headersList[i] + ' '.repeat(columnsWidthList[j] - headersList[i].length);
-        resultString += '│';
-        j++;
-    }
-
-    console.info(resultString);
-}
-
-function printTableContent(columnsWidthList) {
-    for (var i = 0; i < phoneBook.length; i++) {
-        var resultString = '│';
-        var valuesList = getObjectValues(phoneBook[i]);
-        for (var j = 0; j < valuesList.length; j++) {
-            resultString += valuesList[j] + ' '.repeat(columnsWidthList[j] - valuesList[j].length);
-            resultString += '│';
-        }
-        console.info(resultString);
-    }
 }
 
 function getObjectValues(obj) {
