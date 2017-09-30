@@ -19,7 +19,7 @@ module.exports.add = function add(name, phone, email) {
     phoneBook.push(person);
 
     function validateName() {
-        return typeof name === 'string';
+        return typeof name === 'string' && name.length > 0;
     }
 
     function validatePhone() {
@@ -105,30 +105,14 @@ function searchThroughObject(obj, query) {
     return false;
 }
 
-function getObjectValues(obj) {
-    var keysList = getObjectKeys(obj);
-    var valuesList = keysList.map(function (key) {
-        return obj[key];
-    });
-
-    return valuesList;
-}
-
-function getObjectKeys(obj) {
-    return Object.keys(obj);
-}
-
-function getTableHeaders() {
-    if (phoneBook.length === 0) {
+function getColumnsWidthList() {
+    var headersList = getTableHeaders();
+    if (headersList === -1) {
         return -1;
     }
 
-    return getObjectKeys(phoneBook[0]);
-}
-
-function getColumnsWidthList() {
     // Fill the array with headers' lengths
-    var columnsWidthList = getTableHeaders().map(function (header) {
+    var columnsWidthList = headersList.map(function (header) {
         return header.length;
     });
 
@@ -220,4 +204,25 @@ function printTableContent(columnsWidthList) {
         }
         console.info(resultString);
     }
+}
+
+function getObjectValues(obj) {
+    var keysList = getObjectKeys(obj);
+    var valuesList = keysList.map(function (key) {
+        return obj[key];
+    });
+
+    return valuesList;
+}
+
+function getObjectKeys(obj) {
+    return Object.keys(obj);
+}
+
+function getTableHeaders() {
+    if (phoneBook.length === 0) {
+        return -1;
+    }
+
+    return getObjectKeys(phoneBook[0]);
 }
