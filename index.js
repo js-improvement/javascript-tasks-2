@@ -6,14 +6,14 @@ var phoneBook = require('./phoneBook');
 phoneBook.addContact('Сергей', '7 999 6667778', 'gs@example.com');
 phoneBook.addContact('Сергей 2', '999 4433444', 'gs@example.com');
 phoneBook.addContact('MrTrump', '+7 (999) 777-7-777', 'just7@yandex-team.ru');
-//console.info(phoneBook.addContact('Честный Хрюндель', 'invalid phone', 'honest-hrundel'));
+// console.info(phoneBook.addContact('Честный Хрюндель', 'invalid phone', 'honest-hrundel'));
 
-phoneBook.find('3');
+phoneBook.find('8');
 // Выводит построчно записи, все поля через запятую:
 // Сергей, +7 (999) 666-7-778, gogolef@yandex-team.ru
 // Олег, +7 (999) 777-7-777, just7@yandex-team.ru
 
-phoneBook.remove('3');
+phoneBook.remove('7');
 // Выводит количество удалённых контактов, которые удовлетворят запросу:
 // Удален 1 контакт
 

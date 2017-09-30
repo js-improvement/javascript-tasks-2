@@ -9,16 +9,17 @@ var phoneBook = [];
  * ДЛЯ ПОСЛЕДУЮЩЕГО ВЫВОДА В ВИДЕ ТАБЛИЦЫ
  * С ИСПОЛЬЗОВАНИЕМ СИМВОЛОВ ASCII
  * @param numbOfColumn -НОМЕР КОЛОНКИ
+ * @param arrayToPrint -МАССИВ ДЛЯ ПЕЧАТИ
  * 0 -КОЛОНКА ИМЕН
  * 1 -КОЛОНКА ТЕЛЕФОННЫХ НОМЕРОВ
  * 2 -КОЛОНКА ЭЛЕКТРОННОЙ ПОЧТЫ
  * @returns {number} -ВОЗВРАЩАЕТ МАКСИМАЛЬНУЮ ДЛИННУ
  */
-function columnMaxLenght(numbOfColumn) {
+function columnMaxLenght(numbOfColumn, arrayToPrint) {
     var maxLenght = 0;
-    for (var i = 0; i < phoneBook.length; i++) {
-        if (phoneBook[i][numbOfColumn].length > maxLenght) {
-            maxLenght = phoneBook[i][numbOfColumn].length;
+    for (var i = 0; i < arrayToPrint.length; i++) {
+        if (arrayToPrint[i][numbOfColumn].length > maxLenght) {
+            maxLenght = arrayToPrint[i][numbOfColumn].length;
         }
     }
 
@@ -31,9 +32,10 @@ function columnMaxLenght(numbOfColumn) {
  * ДЛЯ ПОИСКА И УДАЛЕНИЯ КОНТАКТОВ
  * @param inputData -ШАБЛОН ПОИСКА В ВИДЕ СТРОКИ
  * @param phoneBook -ТЕЛЕФОННАЯ КНИГА
+ * @param choo - -1 ДЛЯ УДАЛЕНИЯ КОНТАКТОВ, 1 -ДЛЯ ВСЕГО ОСТАЛЬНОГО
  * @returns {Array} -МАСИИВ НАЙДЕННЫХ КОНТАКТОВ
  */
-function finder(inputData, phoneBook) {
+function finder(inputData, phoneBook, choo) {
     var searchPattern = new RegExp(inputData, 'i');
     var findedContacts = [];
     if (inputData === undefined || inputData === null) {
@@ -41,7 +43,7 @@ function finder(inputData, phoneBook) {
         return phoneBook;
     }
     for (var i = 0; i < phoneBook.length; i++) {
-        if (searchPattern.test(phoneBook[i].toString()) === true) {
+        if (choo < 0 ? searchPattern.test(phoneBook[i].toString()) === true : searchPattern.test(phoneBook[i].toString()) === false) {
             findedContacts.push(phoneBook[i]);
         }
     }
@@ -59,20 +61,27 @@ function finder(inputData, phoneBook) {
  * НАПИСАНО В СООАВТОРСТВЕ С САТАНОЙ
  * ГЛУБОКОЙ НОЧЬЮ ПОД ДВУМЯ ДОЗАМИ ДВОЙНОГО ЭСПРЕССО
  * ПЕЧАТАЕМ ГОВНОТАБЛИЧКУ
+ * ГОВНОТАБЛИЧКА ИМЕЕТ ШИРИНУ, ЗАВИСЯЩУЮ ОТ
+ * ДЛИННЫ ЭЛЕМЕНТОВ ПЕЧАТУЕМОГО МАССТВА
  * @param arrayToPrint -МАСИИВ ДАННЫХ, ПОСТУПАЮЩИЙ НА ПЕЧАТЬ
  */
 function printTable(arrayToPrint) {
-    console.info('-'.repeat(columnMaxLenght(0) + columnMaxLenght(1) + columnMaxLenght(2) + 10));
-    console.info('| ИМЯ' + ' '.repeat(columnMaxLenght(0) - 2) + '| ТЕЛЕФОН' +
-    ' '.repeat(columnMaxLenght(1) - 6) + '| eMAIL' + ' '.repeat(columnMaxLenght(2)-4) + '|');
-    console.info('-'.repeat(columnMaxLenght(0) + columnMaxLenght(1) + columnMaxLenght(2) + 10));
-    //console.info(arrayToPrint);
+    var r1name = columnMaxLenght(0, arrayToPrint);
+    var r1phone = columnMaxLenght(1, arrayToPrint);
+    var r1mail = columnMaxLenght(2, arrayToPrint);
+    console.info('-'.repeat(r1name + r1phone + r1mail + 10));
+    console.info('| ИМЯ' + ' '.repeat(r1name - 2) + '| ТЕЛЕФОН' + ' '.repeat(r1phone - 6) +
+        '| eMAIL' + ' '.repeat(r1mail - 4) + '|');
+    console.info('-'.repeat(r1name + r1phone + r1mail + 10));
     for (var i = 0; i < arrayToPrint.length; i++) {
-        console.info('| ' + arrayToPrint[i][0] + ' '.repeat(columnMaxLenght(0) - arrayToPrint[i][0].length + 1) +
-            '| ' + arrayToPrint[i][1] + ' '.repeat(columnMaxLenght(1) - arrayToPrint[i][1].length + 1) +
-            '| ' + arrayToPrint[i][2] + ' '.repeat(columnMaxLenght(2) - arrayToPrint[i][2].length + 1) + '|');
+        var nameLenght = columnMaxLenght(0, arrayToPrint) - arrayToPrint[i][0].length;
+        var phoneLenght = columnMaxLenght(1, arrayToPrint) - arrayToPrint[i][1].length;
+        var mailLenght = columnMaxLenght(2, arrayToPrint) - arrayToPrint[i][2].length;
+        console.info('| ' + arrayToPrint[i][0] + ' '.repeat(nameLenght + 1) +
+            '| ' + arrayToPrint[i][1] + ' '.repeat(phoneLenght + 1) +
+            '| ' + arrayToPrint[i][2] + ' '.repeat(mailLenght + 1) + '|');
     }
-    console.info('-'.repeat(columnMaxLenght(0) + columnMaxLenght(1) + columnMaxLenght(2) + 10) + '\n');
+    console.info('-'.repeat(r1name + r1phone + r1mail + 10) + '\n');
 
 }
 
@@ -102,11 +111,11 @@ module.exports.addContact = function addContact(name, phone, email) {
  * @param query -ПРИНИМАЕТ СТРОКОВОЕ ЗНАЧЕНИЕ ДЛЯ ПОИСКА
  */
 module.exports.find = function find(query) {
-    if (finder(query, phoneBook) === false) {
+    if (finder(query, phoneBook, -1) === false) {
         console.info(query + '  <-----------<  I CAN NOT FIND THIS SHIT!\n');
     } else {
-        console.info('НАЙДЕНО КОНТАКТОВ: ' + finder(query, phoneBook).length);
-        printTable(finder(query, phoneBook));
+        console.info('НАЙДЕНО КОНТАКТОВ: ' + finder(query, phoneBook, -1).length);
+        printTable(finder(query, phoneBook, -1));
     }
 };
 
@@ -119,12 +128,13 @@ module.exports.find = function find(query) {
  * УДАЛЯЕМЫХ КОНТАКТОВ
  */
 module.exports.remove = function remove(query) {
-    var findedArr = finder(query, phoneBook);
-    if (finder(query, phoneBook) === false) {
+    var findedArr = finder(query, phoneBook, -1);
+    if (findedArr === false) {
         console.info(query + '  <-----------<  I CAN NOT FIND AND DELETE THIS SHIT!\n');
     } else {
-        let newBook = phoneBook.filter( x => findedArr.indexOf(x) === -1);//КАК ЗАВЕЩАЛ ЕВСТРОПОВ
-        //СТЫРИЛ С STACKOVERFLOW.COM
+        var newBook = finder(query, phoneBook, 1);
+            // phoneBook.filter( x => findedArr.indexOf(x) === -1); //КАК ЗАВЕЩАЛ ЕВСТРОПОВ
+        // СТЫРИЛ С STACKOVERFLOW.COM НО, ГАДИНА, ESLINT, РУГАЕТСЯ(((((
         phoneBook = newBook;
         console.info('УДАЛЕНО КОНТАКТОВ: ' + findedArr.length);
         printTable(findedArr);
