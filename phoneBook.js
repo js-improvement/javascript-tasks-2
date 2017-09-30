@@ -94,13 +94,10 @@ module.exports.showTable = function showTable() {
 };
 
 function searchThroughObject(obj, query) {
-    var keys = Object.keys(obj);
-    var vals = keys.map(function (key) {
-        return obj[key];
-    });
+    var valuesList = getObjectValues(obj);
 
-    for (var i = 0; i < vals.length; i++) {
-        if (vals[i].indexOf(query) !== -1) {
+    for (var i = 0; i < valuesList.length; i++) {
+        if (valuesList[i].indexOf(query) !== -1) {
             return true;
         }
     }
@@ -108,31 +105,40 @@ function searchThroughObject(obj, query) {
     return false;
 }
 
-function getColumnsWidthList() {
+function getObjectValues(obj) {
+    var keysList = getObjectKeys(obj);
+    var valuesList = keysList.map(function (key) {
+        return obj[key];
+    });
+
+    return valuesList;
+}
+
+function getObjectKeys(obj) {
+    return Object.keys(obj);
+}
+
+function getTableHeaders() {
     if (phoneBook.length === 0) {
         return -1;
     }
 
-    var columnsWidthList = [];
-    var key = '';
+    return getObjectKeys(phoneBook[0]);
+}
 
-    // Fill the array with the headers' lengths
-    for (key in phoneBook[0]) {
-        if (phoneBook[0].hasOwnProperty(key)) {
-            columnsWidthList.push(key.length);
-        }
-    }
+function getColumnsWidthList() {
+    // Fill the array with headers' lengths
+    var columnsWidthList = getTableHeaders().map(function (header) {
+        return header.length;
+    });
 
-    // Find the columns lengths that fit any data
-    var j = 0;
+    // The width of a column should be either the header's length or
+    // the length of the object's value with max string size.
     for (var i = 0; i < phoneBook.length; i++) {
-        for (key in phoneBook[i]) {
-            if (phoneBook[i].hasOwnProperty(key)) {
-                columnsWidthList[j] = Math.max(columnsWidthList[j], phoneBook[i][key].length);
-                j++;
-            }
+        var valuesList = getObjectValues(phoneBook[i]);
+        for (var k = 0; k < valuesList.length; k++) {
+            columnsWidthList[k] = Math.max(columnsWidthList[k], valuesList[k].length);
         }
-        j = 0;
     }
 
     return columnsWidthList;
@@ -192,32 +198,26 @@ function printBotTableLine(columnsWidthList) {
 
 function printTableHeaders(columnsWidthList) {
     var resultString = '│';
-
     var j = 0;
-    for (var key in phoneBook[0]) {
-        if (phoneBook[0].hasOwnProperty(key)) {
-            resultString += key + ' '.repeat(columnsWidthList[j] - key.length) + '│';
-            j++;
-        }
+    var headersList = getTableHeaders();
+
+    for (var i = 0; i < headersList.length; i++) {
+        resultString += headersList[i] + ' '.repeat(columnsWidthList[j] - headersList[i].length);
+        resultString += '│';
+        j++;
     }
 
     console.info(resultString);
 }
 
 function printTableContent(columnsWidthList) {
-    var resultString = '│';
-
-    var j = 0;
     for (var i = 0; i < phoneBook.length; i++) {
-        for (var key in phoneBook[i]) {
-            if (phoneBook[0].hasOwnProperty(key)) {
-                resultString += phoneBook[i][key] +
-                    ' '.repeat(columnsWidthList[j] - phoneBook[i][key].length) + '│';
-                j++;
-            }
+        var resultString = '│';
+        var valuesList = getObjectValues(phoneBook[i]);
+        for (var j = 0; j < valuesList.length; j++) {
+            resultString += valuesList[j] + ' '.repeat(columnsWidthList[j] - valuesList[j].length);
+            resultString += '│';
         }
         console.info(resultString);
-        resultString = '│';
-        j = 0;
     }
 }
