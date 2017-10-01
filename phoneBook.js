@@ -83,11 +83,12 @@ module.exports.remove = function remove(query) {
 */
 module.exports.importFromCsv = function importFromCsv(filename) {
     var data = require('fs').readFileSync(filename, 'utf-8');
+    var contactsList = data.split('\n');
 
-    console.info(data);
-    // Ваша чёрная магия:
-    // - Разбираете записи из `data`
-    // - Добавляете каждую запись в книгу
+    for (var i = 0; i < contactsList.length; i++) {
+        var contactData = contactsList[i].split(';');
+        exports.add(contactData[0], contactData[1], contactData[2]);
+    }
 };
 
 /*
