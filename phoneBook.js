@@ -26,8 +26,25 @@ module.exports.add = function add(name, phone, email) {
    Поиск ведется по всем полям.
 */
 module.exports.find = function find(query) {
+    var searchArray = [];
+    for (var i = 0; i < phoneBook.length; i++) {
+        for (var key in phoneBook[i]) {
+//            console.log(phoneBook[i][key]);
+//            console.log(phoneBook[i][key].indexOf(query));
+            if (phoneBook[i][key].indexOf(query) >= 0 ) {
+                searchArray.push(phoneBook[i]);
+//                console.log(phoneBook[i][key]);
+                break;
+            }
+        }
 
+    }
     // Ваша удивительная магия здесь
+//    console.log(searchArray);
+    for (var j = 0; j < searchArray.length; j++) {
+        var line = searchArray[j].name + ', ' + searchArray[j].phone + ', ' + searchArray[j].email;
+        console.log(line);
+    }
 
 };
 
