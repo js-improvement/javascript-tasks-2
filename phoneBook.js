@@ -59,9 +59,9 @@ module.exports.showTable = function showTable() {
 
     for (var i = 0; i < phoneBook.length; i++) {
         var line = symb(9474);
-        line = line + ' ' + phoneBook[i].name + spaces(12, phoneBook[i].name.length) + symb(9474);
-        line = line + ' ' + phoneBook[i].phone + spaces(19, phoneBook[i].phone.length) + symb(9553);
-        line = line + ' ' + phoneBook[i].email + spaces(17, phoneBook[i].email.length) + symb(9474);
+        line = line + ' ' + phoneBook[i].name + spaces(maxNameLength(), phoneBook[i].name.length) + symb(9474);
+        line = line + ' ' + phoneBook[i].phone + spaces(maxPhoneLength(), phoneBook[i].phone.length) + symb(9553);
+        line = line + ' ' + phoneBook[i].email + spaces(maxEmailLength(), phoneBook[i].email.length) + symb(9474);
         console.log(line);
     }
 
@@ -75,7 +75,7 @@ module.exports.showTable = function showTable() {
 // phoneBook.push(['Name', 'tel', 'email']);
 // phoneBook.push(['Name2', 'tel2', 'email2']);
 
-function HLine(width) {
+function horizLine(width) {
     var line = '';
     for (var i = 0; i < width; i++) {
         line = line + symb(9472);
@@ -88,14 +88,63 @@ function symb(codeValue) {
     return String.fromCharCode(codeValue);
 }
 
+function maxNameLength() {
+    var maxLength = '0';
+    for (var i = 0; i < phoneBook.length; i++) {
+        if (phoneBook[i].name.length > maxLength) {
+            maxLength = phoneBook[i].name.length;
+        }
+    }
+
+    return maxLength + 1;
+}
+
+function maxPhoneLength() {
+    var maxLength = '0';
+    for (var i = 0; i < phoneBook.length; i++) {
+        if (phoneBook[i].phone.length > maxLength) {
+            maxLength = phoneBook[i].phone.length;
+        }
+    }
+
+    return maxLength + 1;
+}
+
+function maxEmailLength() {
+    var maxLength = '0';
+    for (var i = 0; i < phoneBook.length; i++) {
+        if (phoneBook[i].email.length > maxLength) {
+            maxLength = phoneBook[i].email.length;
+        }
+    }
+
+    return maxLength + 1;
+}
+
 function tableTop() {
-    console.log(symb(9484) + HLine(13) + symb(9516) + HLine(20) + symb(9573) + HLine(18) + symb(9488));
-    console.log(symb(9474) + ' Имя' + spaces(12, 3) + symb(9474) + ' Телефон' + spaces(19, 7) + symb(9553) + ' email' + spaces(17, 5) + symb(9474));
-    console.log(symb(9500) + HLine(13) + symb(9532) + HLine(20) + symb(9579) + HLine(18) + symb(9508));
+    var firstLine = symb(9484) + horizLine(maxNameLength() + 1) + symb(9516);
+    firstLine = firstLine + horizLine(maxPhoneLength() + 1) + symb(9573);
+    firstLine = firstLine + horizLine(maxEmailLength() + 1) + symb(9488);
+
+    var secondLine = symb(9474) + ' Имя' + spaces(maxNameLength(), 3) + symb(9474);
+    secondLine = secondLine + ' Телефон' + spaces(maxPhoneLength(), 7) + symb(9553);
+    secondLine = secondLine + ' email' + spaces(maxEmailLength(), 5) + symb(9474);
+
+    var thirdLine = symb(9500) + horizLine(maxNameLength() + 1) + symb(9532);
+    thirdLine = thirdLine + horizLine(maxPhoneLength() + 1) + symb(9579);
+    thirdLine = thirdLine + horizLine(maxEmailLength() + 1) + symb(9508);
+
+    console.log(firstLine);
+    console.log(secondLine);
+    console.log(thirdLine);
 }
 
 function tableBottom() {
-    console.log(symb(9492) + HLine(13) + symb(9524) + HLine(20) + symb(9576) + HLine(18) + symb(9496));
+    var bottomLine = symb(9492) + horizLine(maxNameLength() + 1) + symb(9524);
+    bottomLine = bottomLine + horizLine(maxPhoneLength() + 1) + symb(9576);
+    bottomLine = bottomLine + horizLine(maxEmailLength() + 1) + symb(9496);
+
+    console.log(bottomLine);
 }
 
 function spaces(maxSpacesAmount, reduceAmount) {
