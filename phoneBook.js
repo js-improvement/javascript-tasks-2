@@ -28,16 +28,7 @@ module.exports.add = function add(name, phone, email) {
 module.exports.find = function find(query) {
     var searchArray = [];
     for (var i = 0; i < phoneBook.length; i++) {
-        for (var key in phoneBook[i]) {
-//            console.log(phoneBook[i][key]);
-//            console.log(phoneBook[i][key].indexOf(query));
-            if (phoneBook[i][key].indexOf(query) >= 0 ) {
-                searchArray.push(phoneBook[i]);
-//                console.log(phoneBook[i][key]);
-                break;
-            }
-        }
-
+        scanProperties(i, searchArray, query);
     }
     // Ваша удивительная магия здесь
 //    console.log(searchArray);
@@ -51,9 +42,22 @@ module.exports.find = function find(query) {
 /*
    Функция удаления записи в телефонной книге.
 */
+
+var amountDeletedElements = 0;
 module.exports.remove = function remove(query) {
 
-    // Ваша необьяснимая магия здесь
+    for (var i = 0; i < phoneBook.length; i++) {
+        delProperties(i, query);
+    }
+
+    if (amountDeletedElements === 1) {
+        console.log('Удален ' + amountDeletedElements + ' контакт');
+    } else if ((amountDeletedElements >= 2) && (amountDeletedElements <= 4)) {
+        console.log('Удалено ' + amountDeletedElements + ' контакта');
+    } else {
+        console.log('Удалено ' + amountDeletedElements + ' контактов');
+    }
+
 
 };
 
@@ -172,4 +176,25 @@ function spaces(maxSpacesAmount, reduceAmount) {
     }
 
     return line;
+}
+
+function scanProperties(item, arrayName, queryText) {
+    for (var key in phoneBook[item]) {
+        if (phoneBook[item][key].indexOf(queryText) >= 0) {
+            arrayName.push(phoneBook[item]);
+            break;
+        }
+    }
+}
+
+function delProperties(item, queryText) {
+    for (var key in phoneBook[item]) {
+        if (phoneBook[item][key].indexOf(queryText) >= 0) {
+//            console.log(phoneBook[item]);
+            phoneBook.splice(item, 1);
+            item--;
+            amountDeletedElements++;
+            break;
+        }
+    }
 }
