@@ -143,21 +143,33 @@ function maxEmailLength() {
 }
 
 function tableTop() {
-    var firstLine = symb(9484) + horizLine(maxNameLength() + 1) + symb(9516);
+    /*var firstLine = symb(9484) + horizLine(maxNameLength() + 1) + symb(9516);
     firstLine = firstLine + horizLine(maxPhoneLength() + 1) + symb(9573);
-    firstLine = firstLine + horizLine(maxEmailLength() + 1) + symb(9488);
+    firstLine = firstLine + horizLine(maxEmailLength() + 1) + symb(9488) + '\n';
 
     var secondLine = symb(9474) + ' Имя' + spaces(maxNameLength(), 3) + symb(9474);
     secondLine = secondLine + ' Телефон' + spaces(maxPhoneLength(), 7) + symb(9553);
-    secondLine = secondLine + ' email' + spaces(maxEmailLength(), 5) + symb(9474);
+    secondLine = secondLine + ' email' + spaces(maxEmailLength(), 5) + symb(9474) + '\n';
 
     var thirdLine = symb(9500) + horizLine(maxNameLength() + 1) + symb(9532);
     thirdLine = thirdLine + horizLine(maxPhoneLength() + 1) + symb(9579);
     thirdLine = thirdLine + horizLine(maxEmailLength() + 1) + symb(9508);
+    */
+    var line = symb(9484) + horizLine(maxNameLength() + 1) + symb(9516);
+    line = line + horizLine(maxPhoneLength() + 1) + symb(9573);
+    line = line + horizLine(maxEmailLength() + 1) + symb(9488) + '\n';
+    line = line + symb(9474) + ' Имя' + spaces(maxNameLength(), 3) + symb(9474);
+    line = line + ' Телефон' + spaces(maxPhoneLength(), 7) + symb(9553);
+    line = line + ' email' + spaces(maxEmailLength(), 5) + symb(9474) + '\n';
+    line = line + symb(9500) + horizLine(maxNameLength() + 1) + symb(9532);
+    line = line + horizLine(maxPhoneLength() + 1) + symb(9579);
+    line = line + horizLine(maxEmailLength() + 1) + symb(9508);
 
-    console.log(firstLine);
-    console.log(secondLine);
-    console.log(thirdLine);
+    console.log(line);
+
+//    console.log(firstLine + secondLine + thirdLine);
+//    console.log(secondLine);
+//    console.log(thirdLine);
 }
 
 function tableBottom() {
