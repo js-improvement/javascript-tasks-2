@@ -7,8 +7,10 @@ var phoneBook = []; // Здесь вы храните записи как хот
    На вход может прийти что угодно, будьте осторожны.
 */
 module.exports.add = function add(name, phone, email) {
-    // Ваша невероятная магия здесь
-    if ((name === '') || (phone === '') || (email === '')) {
+    var regexpEmail = /^[\wа-я]{1,10}@[\wа-я\-]{1,10}\.?[\wа-я]{0,3}\.[\wа-я]{2,3}/i;
+    var regexpPhone = /^\+?\d{0,3}\s?(\(\d{3}?\)|\d{3})\s?\d{3}[\s\-]?\d[\s\-]?\d{3}$/i;
+
+    if ((name === '') || (!(regexpPhone.test(phone))) || (!(regexpEmail.test(email)))) {
         return;
     }
 
@@ -27,22 +29,20 @@ module.exports.add = function add(name, phone, email) {
 */
 module.exports.find = function find(query) {
     var searchArray = [];
+
     for (var i = 0; i < phoneBook.length; i++) {
         scanProperties(i, searchArray, query);
     }
-    // Ваша удивительная магия здесь
-//    console.log(searchArray);
+
     for (var j = 0; j < searchArray.length; j++) {
         var line = searchArray[j].name + ', ' + searchArray[j].phone + ', ' + searchArray[j].email;
-        console.log(line);
+        console.info(line);
     }
-
 };
 
 /*
    Функция удаления записи в телефонной книге.
 */
-
 var amountDeletedElements = 0;
 module.exports.remove = function remove(query) {
 
@@ -51,14 +51,12 @@ module.exports.remove = function remove(query) {
     }
 
     if (amountDeletedElements === 1) {
-        console.log('Удален ' + amountDeletedElements + ' контакт');
+        console.info('Удален ' + amountDeletedElements + ' контакт');
     } else if ((amountDeletedElements >= 2) && (amountDeletedElements <= 4)) {
-        console.log('Удалено ' + amountDeletedElements + ' контакта');
+        console.info('Удалено ' + amountDeletedElements + ' контакта');
     } else {
-        console.log('Удалено ' + amountDeletedElements + ' контактов');
+        console.info('Удалено ' + amountDeletedElements + ' контактов');
     }
-
-
 };
 
 /*
@@ -80,10 +78,11 @@ module.exports.showTable = function showTable() {
 
     for (var i = 0; i < phoneBook.length; i++) {
         var line = symb(9474);
-        line = line + ' ' + phoneBook[i].name + spaces(maxNameLength(), phoneBook[i].name.length) + symb(9474);
-        line = line + ' ' + phoneBook[i].phone + spaces(maxPhoneLength(), phoneBook[i].phone.length) + symb(9553);
-        line = line + ' ' + phoneBook[i].email + spaces(maxEmailLength(), phoneBook[i].email.length) + symb(9474);
-        console.log(line);
+        line = line + ' ' + phoneBook[i].name + spaces(maxNameLength(), phoneBook[i].name.length) +
+            symb(9474) + ' ' + phoneBook[i].phone +
+            spaces(maxPhoneLength(), phoneBook[i].phone.length) + symb(9553) + ' ' +
+            phoneBook[i].email + spaces(maxEmailLength(), phoneBook[i].email.length) + symb(9474);
+        console.info(line);
     }
 
     tableBottom();
@@ -93,8 +92,6 @@ module.exports.showTable = function showTable() {
 // phoneBook.add('Сергей', '7 999 6667778', 'gs@example.com');
 // phoneBook.add('Сергей 2', '999 4433444', 'gs@example.com');
 // phoneBook.add('Олег', '+7 (999) 777-7-777', 'just7@yandex-team.ru');
-// phoneBook.push(['Name', 'tel', 'email']);
-// phoneBook.push(['Name2', 'tel2', 'email2']);
 
 function horizLine(width) {
     var line = '';
@@ -143,41 +140,23 @@ function maxEmailLength() {
 }
 
 function tableTop() {
-    /*var firstLine = symb(9484) + horizLine(maxNameLength() + 1) + symb(9516);
-    firstLine = firstLine + horizLine(maxPhoneLength() + 1) + symb(9573);
-    firstLine = firstLine + horizLine(maxEmailLength() + 1) + symb(9488) + '\n';
-
-    var secondLine = symb(9474) + ' Имя' + spaces(maxNameLength(), 3) + symb(9474);
-    secondLine = secondLine + ' Телефон' + spaces(maxPhoneLength(), 7) + symb(9553);
-    secondLine = secondLine + ' email' + spaces(maxEmailLength(), 5) + symb(9474) + '\n';
-
-    var thirdLine = symb(9500) + horizLine(maxNameLength() + 1) + symb(9532);
-    thirdLine = thirdLine + horizLine(maxPhoneLength() + 1) + symb(9579);
-    thirdLine = thirdLine + horizLine(maxEmailLength() + 1) + symb(9508);
-    */
     var line = symb(9484) + horizLine(maxNameLength() + 1) + symb(9516);
-    line = line + horizLine(maxPhoneLength() + 1) + symb(9573);
-    line = line + horizLine(maxEmailLength() + 1) + symb(9488) + '\n';
-    line = line + symb(9474) + ' Имя' + spaces(maxNameLength(), 3) + symb(9474);
-    line = line + ' Телефон' + spaces(maxPhoneLength(), 7) + symb(9553);
-    line = line + ' email' + spaces(maxEmailLength(), 5) + symb(9474) + '\n';
-    line = line + symb(9500) + horizLine(maxNameLength() + 1) + symb(9532);
-    line = line + horizLine(maxPhoneLength() + 1) + symb(9579);
-    line = line + horizLine(maxEmailLength() + 1) + symb(9508);
+    line = line + horizLine(maxPhoneLength() + 1) + symb(9573) + horizLine(maxEmailLength() + 1) +
+        symb(9488) + '\n' + symb(9474) + ' Имя' + spaces(maxNameLength(), 3) + symb(9474) +
+        ' Телефон' + spaces(maxPhoneLength(), 7) + symb(9553) + ' email' +
+        spaces(maxEmailLength(), 5) + symb(9474) + '\n' + symb(9500) + horizLine(maxNameLength() +
+        1) + symb(9532) + horizLine(maxPhoneLength() + 1) + symb(9579) +
+        horizLine(maxEmailLength() + 1) + symb(9508);
 
-    console.log(line);
-
-//    console.log(firstLine + secondLine + thirdLine);
-//    console.log(secondLine);
-//    console.log(thirdLine);
+    console.info(line);
 }
 
 function tableBottom() {
-    var bottomLine = symb(9492) + horizLine(maxNameLength() + 1) + symb(9524);
-    bottomLine = bottomLine + horizLine(maxPhoneLength() + 1) + symb(9576);
-    bottomLine = bottomLine + horizLine(maxEmailLength() + 1) + symb(9496);
+    var bottomLine = symb(9492) + horizLine(maxNameLength() + 1) + symb(9524) +
+        horizLine(maxPhoneLength() + 1) + symb(9576) + horizLine(maxEmailLength() + 1) +
+        symb(9496);
 
-    console.log(bottomLine);
+    console.info(bottomLine);
 }
 
 function spaces(maxSpacesAmount, reduceAmount) {
@@ -202,7 +181,7 @@ function scanProperties(item, arrayName, queryText) {
 function delProperties(item, queryText) {
     for (var key in phoneBook[item]) {
         if (phoneBook[item][key].indexOf(queryText) >= 0) {
-//            console.log(phoneBook[item]);
+//            console.info(phoneBook[item]);
             phoneBook.splice(item, 1);
             item--;
             amountDeletedElements++;
