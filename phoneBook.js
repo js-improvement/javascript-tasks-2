@@ -1,26 +1,28 @@
 'use strict';
 
-var phoneBook = []; // Здесь вы храните записи как хотите
+var phoneBook = [];
 
 /*
    Функция добавления записи в телефонную книгу.
    На вход может прийти что угодно, будьте осторожны.
 */
 module.exports.add = function add(name, phone, email) {
-    var regexpEmail = /^[\wа-я]{1,10}@[\wа-я\-]{1,10}\.?[\wа-я]{0,3}\.[\wа-я]{2,3}/i;
-    var regexpPhone = /^\+?\d{0,3}\s?(\(\d{3}?\)|\d{3})\s?\d{3}[\s\-]?\d[\s\-]?\d{3}$/i;
+    checkPerson(name, phone, email);
 
-    if ((name === '') || (!(regexpPhone.test(phone))) || (!(regexpEmail.test(email)))) {
-        return;
-    }
-
-    var person = {
-        name: name,
-        phone: phone,
-        email: email
-    };
-
-    phoneBook.push(person);
+//    var regexpEmail = /^[\wа-я]{1,10}@[\wа-я\-]{1,10}\.?[\wа-я]{0,3}\.[\wа-я]{2,3}/i;
+//    var regexpPhone = /\+?\d{0,3}\s?(\(\d{3}?\)|\d{3})?\s?\d{3}[\s\-]?\d[\s\-]?\d{3}$/i;
+//
+//    if ((name === '') || (!(regexpPhone.test(phone))) || (!(regexpEmail.test(email)))) {
+//        return;
+//    }
+//
+//    var person = {
+//        name: name,
+//        phone: phone,
+//        email: email
+//    };
+//
+//    phoneBook.push(person);
 };
 
 /*
@@ -64,10 +66,16 @@ module.exports.remove = function remove(query) {
 */
 module.exports.importFromCsv = function importFromCsv(filename) {
     var data = require('fs').readFileSync(filename, 'utf-8');
+    var importedArr = data.split('\r\n');
 
-    // Ваша чёрная магия:
-    // - Разбираете записи из `data`
-    // - Добавляете каждую запись в книгу
+    if (importedArr[importedArr.length] === undefined) {
+        importedArr.pop();
+    }
+
+    for (var i = 0; i < importedArr.length; i++) {
+        var subArr = importedArr[i].split(';');
+        checkPerson(subArr[0], subArr[1], subArr[2]);
+    }
 };
 
 /*
@@ -87,11 +95,6 @@ module.exports.showTable = function showTable() {
 
     tableBottom();
 };
-
-// phoneBook.add('Сергей', '7 999 6667778', 'gs@example.com');
-// phoneBook.add('Сергей', '7 999 6667778', 'gs@example.com');
-// phoneBook.add('Сергей 2', '999 4433444', 'gs@example.com');
-// phoneBook.add('Олег', '+7 (999) 777-7-777', 'just7@yandex-team.ru');
 
 function horizLine(width) {
     var line = '';
@@ -181,11 +184,28 @@ function scanProperties(item, arrayName, queryText) {
 function delProperties(item, queryText) {
     for (var key in phoneBook[item]) {
         if (phoneBook[item][key].indexOf(queryText) >= 0) {
-//            console.info(phoneBook[item]);
             phoneBook.splice(item, 1);
             item--;
             amountDeletedElements++;
             break;
         }
     }
+}
+
+
+function checkPerson(name, phone, email) {
+    var regexpEmail = /^[\wа-я]{1,10}@[\wа-я\-]{1,10}\.?[\wа-я]{0,3}\.[\wа-я]{2,3}/i;
+    var regexpPhone = /^\+?\d{0,3}\s?(\(\d{3}?\)|\d{3})?\s?\d{3}[\s\-]?\d[\s\-]?\d{3}$/i;
+
+    if ((name === '') || (!(regexpPhone.test(phone))) || (!(regexpEmail.test(email)))) {
+        return;
+    }
+
+    var person = {
+        name: name,
+        phone: phone,
+        email: email
+    };
+
+    phoneBook.push(person);
 }
